@@ -1,0 +1,297 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>AI 短影音製作</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&amp;family=Noto+Sans+TC:wght@400;500;700;900&amp;display=swap">
+<style>
+/* one deliberate look, taken from the printed quotation: white paper, black ink, one cobalt */
+:root{--paper:#ffffff;--ink:#111214;--soft:#55585f;--rule:#dcdde0;--blue:#2740e6;--on-blue:#ffffff;--tint:#f3f4f7;
+  --font:'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;--mono:'JetBrains Mono',ui-monospace,Menlo,monospace;color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.6;letter-spacing:.02em;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1120px;margin-inline:auto;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+
+/* letterhead */
+.head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:22px 18px;border-bottom:3px solid var(--ink)}
+.head .k{font-family:var(--mono);font-weight:700;font-size:14px;letter-spacing:.22em}
+.head nav{display:flex;align-items:center;gap:clamp(14px,2.2vw,30px);font-size:15px;font-weight:700}
+.head nav a{text-decoration:none}
+.head nav a:hover{color:var(--blue)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;background:var(--ink);color:var(--paper);font-weight:900;text-decoration:none;letter-spacing:.06em;border:2px solid var(--ink);transition:background .15s,color .15s}
+.btn:hover{background:var(--blue);border-color:var(--blue);color:var(--on-blue)}
+.btn.line{background:transparent;color:var(--ink)}
+.btn.line:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.head nav a.btn{min-height:40px;padding:0 16px;font-size:14px}
+.head nav a.btn:hover{color:var(--on-blue)}
+
+/* cover */
+.cover{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:clamp(24px,5vw,72px);align-items:end;padding-block:clamp(36px,6vw,84px) clamp(40px,6vw,80px)}
+h1{margin:0;font-weight:900;font-size:clamp(46px,9.2vw,124px);line-height:1.04;letter-spacing:0}
+h1 span{display:block}
+.cover .lede{margin:18px 0 0;font-size:clamp(18px,2vw,24px);color:var(--soft);font-weight:500}
+.cover .lede b{color:var(--ink);font-weight:700}
+.cover .facts{margin:28px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:0 clamp(20px,3vw,44px);border-top:1px solid var(--ink)}
+.cover .facts li{padding-top:12px;font-size:14px;color:var(--soft)}
+.cover .facts b{display:block;font-family:var(--mono);font-weight:800;font-size:clamp(22px,2.6vw,32px);color:var(--ink);letter-spacing:0;line-height:1.2}
+.cover .go{margin-top:30px;display:flex;flex-wrap:wrap;gap:12px}
+.demo{position:relative;margin:0;background:var(--blue);padding:clamp(14px,2vw,22px);justify-self:end;width:min(100%,330px)}
+.demo video{display:block;width:100%;aspect-ratio:9/16;object-fit:cover;background:#0d1330}
+.demo figcaption{display:flex;justify-content:space-between;gap:10px;margin-top:12px;color:var(--on-blue);font-size:13px;font-weight:700}
+.demo figcaption span:first-child{font-family:var(--mono);letter-spacing:.14em}
+
+/* sections follow the quotation's rhythm: a bold label, a heavy rule, rows */
+section{padding-block:clamp(36px,5vw,64px)}
+.label{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin:0;padding-bottom:12px;border-bottom:2px solid var(--ink)}
+.label h2{margin:0;font-size:clamp(24px,3.2vw,38px);font-weight:900;letter-spacing:.06em;line-height:1.2}
+.label span{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.2em;color:var(--soft)}
+
+.works{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(8px,1.2vw,16px);margin:clamp(20px,3vw,32px) 0 0;padding:0;list-style:none}
+.works li{min-width:0}
+.works video{display:block;width:100%;aspect-ratio:9/16;object-fit:cover;background:#0d1330}
+.works b{display:block;margin-top:10px;font-size:15px;font-weight:700;line-height:1.4}
+.plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,2vw,24px);margin-top:clamp(20px,3vw,32px)}
+.plan{border:3px solid var(--ink);padding:clamp(22px,3.4vw,40px);display:flex;flex-direction:column;gap:6px;min-width:0}
+.plan.top{background:var(--blue);border-color:var(--blue);color:var(--on-blue)}
+.plan h3{margin:0;font-size:clamp(20px,2.2vw,26px);font-weight:900;letter-spacing:.1em}
+.amt{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:6px 0 14px;padding-bottom:14px;border-bottom:1px solid currentColor;font-family:var(--mono);font-weight:800;line-height:1}
+.amt i{font-style:normal;font-size:clamp(15px,1.6vw,20px);font-weight:700}
+.amt b{font-size:clamp(52px,8.4vw,104px);letter-spacing:-.02em}
+.amt em{font-style:normal;font-family:var(--font);font-size:clamp(15px,1.6vw,20px);font-weight:700}
+.plan p{margin:0}
+.plan .what{font-weight:900;font-size:clamp(17px,1.7vw,20px)}
+.plan .note{color:var(--soft);font-size:16px}
+.plan.top .note{color:var(--on-blue);opacity:.86}
+.same{margin:16px 0 0;color:var(--soft);font-size:15px}
+
+.rows{margin:0;padding:0;list-style:none}
+.rows li{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:clamp(16px,2.2vw,24px) 0;border-bottom:1px solid var(--rule)}
+.rows .t{font-weight:900;font-size:clamp(19px,2.1vw,25px);line-height:1.3}
+.rows .t small{display:block;margin-top:4px;font-size:15px;font-weight:400;color:var(--soft)}
+.rows .v{flex:none;text-align:right;color:var(--soft);font-size:clamp(16px,1.8vw,20px)}
+.rows .p{flex:none;text-align:right;font-size:15px;color:var(--soft);line-height:1.5}
+.rows .p b{font-family:var(--mono);font-weight:800;font-size:clamp(21px,2.5vw,29px);color:var(--ink);margin:0 4px 0 6px}
+
+/* estimate */
+.est{background:var(--tint)}
+.est .box{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(20px,4vw,56px);margin-top:clamp(20px,3vw,32px);align-items:start}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:2px solid var(--ink);background:var(--paper)}
+.seg button{appearance:none;border:0;background:transparent;color:var(--ink);font:inherit;font-weight:900;min-height:52px;cursor:pointer;letter-spacing:.08em}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg button.top[aria-pressed="true"]{background:var(--blue);color:var(--on-blue)}
+.field{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.field .n{font-weight:700}
+.field .n small{display:block;font-weight:400;font-size:14px;color:var(--soft)}
+.step{display:flex;align-items:center;border:2px solid var(--ink);background:var(--paper);flex:none}
+.step button{appearance:none;border:0;background:transparent;color:var(--ink);width:46px;height:46px;font:800 22px/1 var(--mono);cursor:pointer}
+.step button:hover{background:var(--ink);color:var(--paper)}
+.step button:disabled{color:var(--rule);background:transparent;cursor:default}
+.step output{min-width:46px;text-align:center;font:800 19px/1 var(--mono)}
+.sum{background:var(--paper);border:3px solid var(--ink);padding:clamp(20px,3vw,32px)}
+.sum dl{margin:0;display:grid;grid-template-columns:1fr auto;gap:10px 16px;font-size:16px}
+.sum dt{color:var(--soft)}
+.sum dd{margin:0;text-align:right;font-family:var(--mono);font-weight:700}
+.sum .tot{margin:18px 0 0;padding-top:16px;border-top:2px solid var(--ink);display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.sum .tot span{font-weight:900;letter-spacing:.1em}
+.sum .tot b{font-family:var(--mono);font-weight:800;font-size:clamp(38px,5.4vw,60px);line-height:1;letter-spacing:-.02em;color:var(--blue)}
+.sum .fine{margin:14px 0 18px;font-size:14px;color:var(--soft)}
+.sum .btn{width:100%}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:0;padding:0;list-style:none;counter-reset:s}
+.flow li{counter-increment:s;padding:clamp(18px,2.4vw,28px) clamp(14px,2vw,24px) clamp(18px,2.4vw,28px) 0;border-bottom:1px solid var(--rule)}
+.flow li+li{padding-left:clamp(14px,2vw,24px);border-left:1px solid var(--rule)}
+.flow li::before{content:"0" counter(s);display:block;font:800 clamp(30px,3.6vw,44px)/1 var(--mono);color:var(--blue);margin-bottom:12px}
+.flow b{display:block;font-size:clamp(18px,1.9vw,22px);font-weight:900;line-height:1.3}
+.flow span{display:block;margin-top:6px;font-size:15px;color:var(--soft)}
+
+/* sign-off */
+.sign{border-top:3px solid var(--ink);padding-block:clamp(28px,4vw,48px) 48px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.sign p{margin:0}
+.sign .who{font-size:clamp(26px,3.4vw,40px);font-weight:900;line-height:1.2}
+.sign .who small{display:block;margin-top:6px;font-size:14px;font-weight:400;color:var(--soft)}
+.sign .cta{text-align:right}
+.sign .cta small{display:block;margin-top:10px;font-family:var(--mono);font-size:14px;color:var(--soft);user-select:all}
+
+@media (max-width:760px){
+  .head nav a:not(.btn){display:none}
+  .cover{grid-template-columns:1fr;align-items:start}
+  .demo{justify-self:start;width:min(72%,300px)}
+  .plans{grid-template-columns:1fr}
+  .works{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:44%;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px;-webkit-overflow-scrolling:touch}
+  .works li{scroll-snap-align:start}
+  .est .box{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr 1fr}
+  .flow li:nth-child(3){padding-left:0;border-left:0}
+  .rows li{align-items:flex-start}
+  .sign .cta{text-align:left}
+}
+@media (max-width:420px){
+  .cover .facts{grid-template-columns:repeat(3,minmax(0,1fr));gap:0 12px}
+  .cover .go .btn{flex:1 1 100%}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <span class="k">QUOTATION</span>
+    <nav aria-label="主選單">
+      <a href="#works">作品</a>
+      <a href="#plans">方案</a>
+      <a href="#include">內容</a>
+      <a href="#extra">加價項目</a>
+      <a href="#estimate">試算</a>
+      <a class="btn" href="https://line.me/ti/p/~ss8332580" target="_blank" rel="noopener">LINE 洽詢</a>
+    </nav>
+  </header>
+
+  <div class="cover" id="top">
+    <div>
+      <h1><span>AI 短影音</span><span>製作</span></h1>
+      <p class="lede">每支 <b>60–90 秒</b>｜AI 配音、AI 對嘴口播、B-roll 畫面，一次做好。</p>
+      <ul class="facts">
+        <li><b>60–90</b>秒／支</li>
+        <li><b>4</b>段 B-roll</li>
+        <li><b>2</b>輪修改</li>
+      </ul>
+      <div class="go">
+        <a class="btn" href="https://line.me/ti/p/~ss8332580" target="_blank" rel="noopener">LINE 洽詢</a>
+        <a class="btn line" href="#plans">看方案與價格</a>
+      </div>
+    </div>
+    <figure class="demo">
+      <video muted loop playsinline preload="metadata" poster="img/ai-demo.jpg" src="img/ai-demo.mp4" title="AI 短影音範例片段"></video>
+      <figcaption><span>SAMPLE</span><span>AI 短影音範例</span></figcaption>
+    </figure>
+  </div>
+</div>
+
+<main>
+<section id="works"><div class="wrap">
+  <div class="label"><h2>作品範例</h2><span>WORKS</span></div>
+  <ul class="works">
+    <li><video muted loop playsinline preload="none" poster="img/work-1.jpg" src="img/work-1.mp4" title="富不過三代"></video><b>富不過三代</b></li>
+    <li><video muted loop playsinline preload="none" poster="img/work-2.jpg" src="img/work-2.mp4" title="有錢人零花錢"></video><b>有錢人零花錢</b></li>
+    <li><video muted loop playsinline preload="none" poster="img/work-3.jpg" src="img/work-3.mp4" title="報酬率越漂亮的團隊，你越要小心"></video><b>報酬率越漂亮的團隊，你越要小心</b></li>
+    <li><video muted loop playsinline preload="none" poster="img/work-4.jpg" src="img/work-4.mp4" title="只懂保險"></video><b>只懂保險</b></li>
+    <li><video muted loop playsinline preload="none" poster="img/work-5.jpg" src="img/work-5.mp4" title="理專熱情推薦你買新基金"></video><b>理專熱情推薦你買新基金</b></li>
+    <li><video muted loop playsinline preload="none" poster="img/work-6.jpg" src="img/work-6.mp4" title="客戶當朋友"></video><b>客戶當朋友</b></li>
+  </ul>
+</div></section>
+
+<section id="plans"><div class="wrap">
+  <div class="label"><h2>方案</h2><span>PLANS</span></div>
+  <div class="plans">
+    <article class="plan">
+      <h3>標準</h3>
+      <p class="amt"><i>NT$</i><b>3,200</b><em>／支</em></p>
+      <p class="what">B-roll 使用標準模型</p>
+      <p class="note">含 2 輪修改</p>
+    </article>
+    <article class="plan top">
+      <h3>旗艦</h3>
+      <p class="amt"><i>NT$</i><b>4,000</b><em>／支</em></p>
+      <p class="what">B-roll 使用高階模型 Veo</p>
+      <p class="note">含 2 輪修改</p>
+    </article>
+  </div>
+  <p class="same">兩個方案的內容相同，差別在 B-roll 畫面使用的 AI 模型。</p>
+</div></section>
+
+<section id="include"><div class="wrap">
+  <div class="label"><h2>內容包含</h2><span>INCLUDED</span></div>
+  <ul class="rows">
+    <li><span class="t">AI 配音</span><span class="v">1 支</span></li>
+    <li><span class="t">AI 對嘴口播畫面</span><span class="v">60–90 秒</span></li>
+    <li><span class="t">B-roll 畫面</span><span class="v">4 段，每段約 5 秒</span></li>
+    <li><span class="t">修改</span><span class="v">2 輪</span></li>
+  </ul>
+</div></section>
+
+<section id="extra"><div class="wrap">
+  <div class="label"><h2>加價項目</h2><span>ADD-ONS</span></div>
+  <ul class="rows">
+    <li><span class="t">額外修改<small>第 3 輪起，依實際時數計</small></span><span class="p"><b>NT$720</b>／小時</span></li>
+    <li><span class="t">加一段 B-roll<small>每段約 5 秒</small></span><span class="p">標準<b>NT$202</b>／段<br>旗艦<b>NT$405</b>／段</span></li>
+    <li><span class="t">重新配音＋對嘴<small>定稿後改稿時適用</small></span><span class="p"><b>NT$873</b>／次</span></li>
+  </ul>
+</div></section>
+
+<section class="est" id="estimate"><div class="wrap">
+  <div class="label"><h2>費用試算</h2><span>ESTIMATE</span></div>
+  <div class="box">
+    <div>
+      <div class="seg" role="group" aria-label="方案">
+        <button type="button" data-plan="std" aria-pressed="true">標準</button>
+        <button type="button" class="top" data-plan="top" aria-pressed="false">旗艦</button>
+      </div>
+      <div class="field"><span class="n">影片支數</span><span class="step"><button type="button" data-k="n" data-d="-1" aria-label="減少支數">−</button><output id="o-n">1</output><button type="button" data-k="n" data-d="1" aria-label="增加支數">+</button></span></div>
+      <div class="field"><span class="n">加購 B-roll<small>每段約 5 秒</small></span><span class="step"><button type="button" data-k="b" data-d="-1" aria-label="減少 B-roll 段數">−</button><output id="o-b">0</output><button type="button" data-k="b" data-d="1" aria-label="增加 B-roll 段數">+</button></span></div>
+      <div class="field"><span class="n">額外修改<small>第 3 輪起，以小時計</small></span><span class="step"><button type="button" data-k="h" data-d="-1" aria-label="減少修改時數">−</button><output id="o-h">0</output><button type="button" data-k="h" data-d="1" aria-label="增加修改時數">+</button></span></div>
+      <div class="field"><span class="n">重新配音＋對嘴<small>定稿後改稿時適用</small></span><span class="step"><button type="button" data-k="r" data-d="-1" aria-label="減少重新配音次數">−</button><output id="o-r">0</output><button type="button" data-k="r" data-d="1" aria-label="增加重新配音次數">+</button></span></div>
+    </div>
+    <div class="sum" aria-live="polite">
+      <dl id="lines"><dt>標準 × 1 支</dt><dd>NT$3,200</dd></dl>
+      <p class="tot"><span>合計</span><b id="total">NT$3,200</b></p>
+      <p class="fine">金額單位：新台幣。試算僅供參考，實際金額以報價單為準。</p>
+      <a class="btn" href="https://line.me/ti/p/~ss8332580" target="_blank" rel="noopener">LINE 洽詢</a>
+    </div>
+  </div>
+</div></section>
+
+<section id="flow"><div class="wrap">
+  <div class="label"><h2>製作流程</h2><span>PROCESS</span></div>
+  <ol class="flow">
+    <li><b>提供內容</b><span>給我腳本或想講的主題</span></li>
+    <li><b>配音與口播</b><span>AI 配音，做出對嘴口播畫面</span></li>
+    <li><b>加入 B-roll</b><span>4 段畫面，每段約 5 秒</span></li>
+    <li><b>修改定稿</b><span>含 2 輪修改，確認後交件</span></li>
+  </ol>
+</div></section>
+</main>
+
+<div class="wrap">
+  <footer class="sign">
+    <p class="who">剪輯師Wang<small>AI 短影音製作｜金額單位：新台幣</small></p>
+    <p class="cta"><a class="btn" href="https://line.me/ti/p/~ss8332580" target="_blank" rel="noopener">LINE 洽詢</a><small>LINE ID：ss8332580</small></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var P={std:{name:'標準',unit:3200,broll:202},top:{name:'旗艦',unit:4000,broll:405}}, HOUR=720, REDUB=873;
+  var s={plan:'std',n:1,b:0,h:0,r:0}, min={n:1,b:0,h:0,r:0}, max={n:99,b:99,h:99,r:99};
+  var fmt=function(v){ return 'NT$'+v.toLocaleString('en-US'); };
+  var lines=document.getElementById('lines'), total=document.getElementById('total');
+  function row(t,v){ var a=document.createElement('dt'), b=document.createElement('dd'); a.textContent=t; b.textContent=fmt(v); lines.appendChild(a); lines.appendChild(b); return v; }
+  function paint(){
+    var p=P[s.plan], sum=0; lines.textContent='';
+    sum+=row(p.name+' × '+s.n+' 支',p.unit*s.n);
+    if(s.b) sum+=row('加購 B-roll × '+s.b+' 段',p.broll*s.b);
+    if(s.h) sum+=row('額外修改 × '+s.h+' 小時',HOUR*s.h);
+    if(s.r) sum+=row('重新配音＋對嘴 × '+s.r+' 次',REDUB*s.r);
+    total.textContent=fmt(sum);
+    ['n','b','h','r'].forEach(function(k){ document.getElementById('o-'+k).textContent=s[k]; });
+    [].forEach.call(document.querySelectorAll('.step button'),function(b){ var k=b.getAttribute('data-k'), d=+b.getAttribute('data-d'); b.disabled=(d<0&&s[k]<=min[k])||(d>0&&s[k]>=max[k]); });
+    [].forEach.call(document.querySelectorAll('.seg button'),function(b){ b.setAttribute('aria-pressed',String(b.getAttribute('data-plan')===s.plan)); });
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('button'); if(!b) return;
+    if(b.hasAttribute('data-plan')){ s.plan=b.getAttribute('data-plan'); paint(); }
+    else if(b.hasAttribute('data-k')){ var k=b.getAttribute('data-k'); s[k]=Math.max(min[k],Math.min(max[k],s[k]+(+b.getAttribute('data-d')))); paint(); }
+  });
+  paint();
+  /* sample clip plays only while it is on screen; stays on its still frame for reduced motion */
+  var vs=[].slice.call(document.querySelectorAll('.demo video, .works video'));
+  if(vs.length&&!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    var play=function(v){ var p=v.play(); if(p&&p.catch) p.catch(function(){}); };
+    if('IntersectionObserver' in window){ var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting) play(e.target); else e.target.pause(); }); },{threshold:.25}); vs.forEach(function(v){ io.observe(v); }); } else vs.forEach(play);
+  }
+})();
+</script>
+
+</body></html>
